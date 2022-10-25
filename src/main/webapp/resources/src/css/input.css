@@ -21,7 +21,7 @@ select.value-picker-element {
     padding: 10px
 }
 
-#input_x_warning {
+#input_y_warning {
     color: var(--error)
 }
 

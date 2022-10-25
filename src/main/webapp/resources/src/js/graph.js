@@ -5,8 +5,7 @@ function getCssColor(name) {
 }
 
 
-function initializeCanvasGraph(
-    BASE_URL
+export function initializeCanvasGraph(
 ) {
     /* Init graph parameters */
     const markLen = 20
@@ -388,7 +387,7 @@ function initializeCanvasGraph(
 
 }
 
-initializeCanvasGraph("http://localhost:8080/lab3-1.0-SNAPSHOT")
+
 
 
 

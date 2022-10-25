@@ -1,31 +1,42 @@
-package com.ruskaof.lab3;
+package com.ruskaof.lab3.repository.impl;
 
+import com.ruskaof.lab3.AttemptBean;
+import com.ruskaof.lab3.repository.api.AttemptsRepository;
+import com.ruskaof.lab3.util.area.check.api.AreaCheck;
+import com.ruskaof.lab3.util.area.check.di.AreaCheckQualifier;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
+import javax.inject.Named;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-@ManagedBean
+/**
+ * Main implementation of AttemptsRepository interface
+ */
+@Named("attemptsRepository")
 @SessionScoped
-public class DbManager {
+public class AttemptsRepositoryImpl implements Serializable, AttemptsRepository {
     SessionFactory sessionFactory = new Configuration().configure("hibernate.cfg.xml").addAnnotatedClass(AttemptBean.class).buildSessionFactory();
     private int id = 0;
 
-    static {
+    @Inject
+    @AreaCheckQualifier
+    private AreaCheck areaCheck;
+
+    {
         System.out.println("DbManager created");
     }
 
     public void addAttempt(AttemptBean attemptBean) {
-        attemptBean.checkHit();
+        areaCheck.checkHit(attemptBean);
         System.out.println("addAttempt");
         id++;
-        attemptBean.checkHit();
         attemptBean.setAttempt(id);
         Session session = sessionFactory.getCurrentSession();
         session.beginTransaction();
@@ -47,17 +58,13 @@ public class DbManager {
 
     public void addAttemptFromJsParams(int currentR) {
         final Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-        System.out.println("addAttemptFromJsParams");
-        for (Map.Entry<String, String> entry : params.entrySet()) {
-            System.out.println(entry.getKey() + " " + entry.getValue());
-        }
         try {
             double xCoordinate = Double.parseDouble(params.get("x"));
             double yCoordinate = Double.parseDouble(params.get("y"));
             double graphR = Double.parseDouble(params.get("r"));
             final AttemptBean attemptBean = new AttemptBean(
-                    xCoordinate / graphR,
-                    yCoordinate / graphR,
+                    xCoordinate / graphR * currentR,
+                    yCoordinate / graphR * currentR,
                     currentR
             );
             addAttempt(attemptBean);

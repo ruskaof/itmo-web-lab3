@@ -1,0 +1,25 @@
+{
+  "name": "lab3",
+  "version": "1.0.0",
+  "description": "Web lab 3",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ruskaof/itmo-web-lab3.git"
+  },
+  "author": "ruskaof",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ruskaof/itmo-web-lab3/issues"
+  },
+  "homepage": "https://github.com/ruskaof/itmo-web-lab3#readme",
+  "devDependencies": {
+    "css-loader": "^6.7.1",
+    "style-loader": "^3.3.1",
+    "webpack-cli": "^4.10.0"
+  }
+}

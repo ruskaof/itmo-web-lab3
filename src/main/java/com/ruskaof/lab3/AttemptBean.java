@@ -2,13 +2,15 @@ package com.ruskaof.lab3;
 
 import jakarta.persistence.*;
 
-import javax.faces.bean.ManagedBean;
+import javax.enterprise.context.SessionScoped;
+import javax.inject.Named;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
-@ManagedBean
+@Named("attemptBean")
+@SessionScoped
 @Table(name = "attempts")
 @Entity
 public class AttemptBean implements Serializable {
@@ -23,24 +25,25 @@ public class AttemptBean implements Serializable {
     @Column
     private boolean hit;
     @Column
-    private Long workTime;
+    private Long processTime;
     @Column
-    private Date startTime;
+    private Date attemptTime;
     @Transient
-    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 
     public AttemptBean() {
     }
+
     public AttemptBean(double x, double y, int r) {
         this.x = x;
         this.y = y;
         this.r = r;
     }
+
     public int getId() {
         return attempt;
     }
-
 
     public int getAttempt() {
         return attempt;
@@ -82,30 +85,20 @@ public class AttemptBean implements Serializable {
         this.hit = hit;
     }
 
-    public Long getWorkTime() {
-        return workTime;
+    public Long getProcessTime() {
+        return processTime;
     }
 
-    public void setWorkTime(Long workTime) {
-        this.workTime = workTime;
+    public void setProcessTime(Long workTime) {
+        this.processTime = workTime;
     }
 
-    public Date getStartTime() {
-        return startTime;
+    public Date getAttemptTime() {
+        return attemptTime;
     }
 
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime;
-    }
-
-    public void checkHit() {
-        long start = System.currentTimeMillis();
-        if (x >= 0 && y <= r/2 - x && y >= 0) hit = true;
-        else if (x >= 0 && y<=0 && y >= -r && x <= r/2) hit = true;
-        else if (x<=0 && y >= 0 && x*x+y*y <= r*r) hit = true;
-        else hit = false;
-        startTime = new Date(start);
-        workTime = ((System.currentTimeMillis() - start)/1000);
+    public void setAttemptTime(Date startTime) {
+        this.attemptTime = startTime;
     }
 
     @Override
@@ -113,11 +106,11 @@ public class AttemptBean implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AttemptBean that = (AttemptBean) o;
-        return attempt == that.attempt && Double.compare(that.x, x) == 0 && Double.compare(that.y, y) == 0 && Double.compare(that.r, r) == 0 && hit == that.hit && Objects.equals(workTime, that.workTime) && Objects.equals(startTime, that.startTime) && Objects.equals(simpleDateFormat, that.simpleDateFormat);
+        return attempt == that.attempt && Double.compare(that.x, x) == 0 && Double.compare(that.y, y) == 0 && Double.compare(that.r, r) == 0 && hit == that.hit && Objects.equals(processTime, that.processTime) && Objects.equals(attemptTime, that.attemptTime) && Objects.equals(simpleDateFormat, that.simpleDateFormat);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(attempt, x, y, r, hit, workTime, startTime, simpleDateFormat);
+        return Objects.hash(attempt, x, y, r, hit, processTime, attemptTime, simpleDateFormat);
     }
 }
