@@ -12,7 +12,6 @@
 </h:head>
 
 <h:body>
-    <p:remoteCommand name="addAttempt" action="#{attemptsRepository.addAttemptFromJsParams(attemptBean.r)}" update="table"/>
     <header>
         <h1>Dmitrii Rusinov</h1>
         <h2>P32302, var: 3216</h2>
@@ -33,21 +32,20 @@
             <h:form id="form">
                 <h5 class="label">X</h5>
                 <h:panelGrid columns="1">
-                    <p:inputNumber id="x" value="#{attemptBean.x}" validatorMessage="X must be in range [-4, 4]" decimalSeparator="." readonly="true">
+                    <p:inputNumber id="x" value="#{attemptBean.x}" decimalSeparator=".">
                         <f:validateDoubleRange minimum="-4" maximum="4"/>
                     </p:inputNumber>
                     <p:slider for="x" minValue="-4" maxValue="4" step="1"/>
                 </h:panelGrid>
-                <h:message for="x" id="x-error"/>
 
                 <h5 class="label">Y</h5>
                 <h:panelGrid columns="1">
                     <p:inputNumber name="y" id="y" maxlength="10" value="#{attemptBean.y}" decimalSeparator=".">
                         <f:validateDoubleRange minimum="-5" maximum="3"/>
                     </p:inputNumber>
-                    <p id="input_y_warning">abobus amogus</p>
-
                 </h:panelGrid>
+                <p:message for="y" display="text"/>
+
 
                 <h5 class="label">R</h5>
                 <h:panelGrid columns="1">
@@ -62,7 +60,8 @@
 
                 <div class="list-item">
                     <div class="buttons-container">
-                        <p:commandButton id="submit" value="Submit" action="#{attemptsRepository.addAttempt(attemptBean)}" update="table" />
+                        <p:commandButton id="submit" value="Submit"
+                                         action="#{attemptsRepository.addAttempt(attemptBean)}" update="table @form"/>
                         <p:commandButton id="reset" value="Reset" action="#{attemptsRepository.clearAttempts()}" update="table" />
                     </div>
                 </div>
@@ -115,4 +114,6 @@
 
 </h:body>
 <h:outputScript name="main.js" library="target"/>
+<p:remoteCommand name="addAttempt" action="#{attemptsRepository.addAttemptFromJsParams(attemptBean.r)}" update="table"
+                 process="@this"/>
 </html>

@@ -57,6 +57,7 @@ public class AttemptsRepositoryImpl implements Serializable, AttemptsRepository 
     }
 
     public void addAttemptFromJsParams(int currentR) {
+        System.out.println("addAttemptFromJsParams");
         final Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
         try {
             double xCoordinate = Double.parseDouble(params.get("x"));
