@@ -11,7 +11,11 @@ module.exports = {
             {
                 test: /\.css$/i,
                 use: ["style-loader", "css-loader"],
+                exclude: [
+                    path.resolve(__dirname, "src/main/webapp/resources/src/js/clock.js"),
+                ]
             },
         ],
     },
+
 };

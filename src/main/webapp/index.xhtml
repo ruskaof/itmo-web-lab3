@@ -3,9 +3,28 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
-<f:view>
-    <h:outputLabel value="Hello, world"/>
-</f:view>
+>
+
+<h:head>
+    <title>web lab 3</title>
+    <h:outputStylesheet name="src/css/index.css"/>
+    <h:outputStylesheet name="src/css/constants.css"/>
+    <h:outputStylesheet name="src/css/header.css"/>
+</h:head>
+
+<h:body>
+    <header>
+        <h1>Dmitrii Rusinov</h1>
+        <h2>P32302, var: 3216</h2>
+    </header>
+
+
+    <h:form>
+        <canvas id="clock" width="390" height="390"></canvas>
+        <h:button value="go to main page" action="go-to-main"/>
+    </h:form>
+</h:body>
+
+
+<h:outputScript library="src" name="js/clock.js"/>
 </html>
