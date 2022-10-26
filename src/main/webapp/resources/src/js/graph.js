@@ -227,8 +227,8 @@ export function initializeCanvasGraph(
     function drawTriangle() {
         ctx.beginPath();
         ctx.moveTo(width / 2, height / 2);
-        ctx.lineTo(width / 2 - rValue / 2, height / 2);
-        ctx.lineTo(width / 2, height / 2 - rValue);
+        ctx.lineTo(width / 2 + rValue / 2, height / 2);
+        ctx.lineTo(width / 2, height / 2 + rValue / 2);
         ctx.fill();
     }
 
@@ -237,9 +237,9 @@ export function initializeCanvasGraph(
         ctx.arc(
             width / 2,
             height / 2,
-            rValue / 2,
-            -Math.PI / 2 + Math.PI,
-            Math.PI,
+            rValue,
+            -Math.PI / 2,
+            0,
             false
         );
         ctx.lineTo(width / 2, height / 2);
@@ -251,8 +251,8 @@ export function initializeCanvasGraph(
         ctx.fillRect(
             width / 2,
             height / 2,
-            rValue,
-            rValue
+            -rValue,
+            -rValue / 2
         );
         ctx.fill();
     }

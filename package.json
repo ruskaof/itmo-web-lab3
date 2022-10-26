@@ -4,7 +4,7 @@
   "description": "Web lab 3",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "cypress open",
     "build": "webpack"
   },
   "repository": {
@@ -19,6 +19,7 @@
   "homepage": "https://github.com/ruskaof/itmo-web-lab3#readme",
   "devDependencies": {
     "css-loader": "^6.7.1",
+    "cypress": "^10.11.0",
     "style-loader": "^3.3.1",
     "webpack-cli": "^4.10.0"
   }

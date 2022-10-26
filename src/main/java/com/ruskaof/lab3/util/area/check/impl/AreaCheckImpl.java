@@ -19,12 +19,12 @@ public class AreaCheckImpl implements AreaCheck, Serializable {
 
     @Override
     public void checkHit(AttemptBean attemptBean) {
-        long startTime = System.currentTimeMillis();
-        attemptBean.setAttemptTime(new Date(startTime));
+        long startTime = System.nanoTime();
+        attemptBean.setAttemptTime(new Date(System.currentTimeMillis()));
 
         boolean hit = attemptIsInArea(attemptBean);
         attemptBean.setHit(hit);
-        attemptBean.setProcessTime(System.currentTimeMillis() - attemptBean.getAttemptTime().getTime());
+        attemptBean.setProcessTime(System.nanoTime() - startTime);
     }
 
     private boolean attemptIsInArea(AttemptBean attemptBean) {
