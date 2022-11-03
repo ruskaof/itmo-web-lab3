@@ -48,5 +48,11 @@ context("test2", () => {
         cy.get("#table").find("table").find("tbody").find("tr").find("td").eq(2).should("have.text", "2.0");
         cy.get("#table").find("table").find("tbody").find("tr").find("td").eq(3).should("have.text", "2");
     })
+
+    it("can handle 10 million requests", () => {
+        for (let i = 0; i < 10000000; i++) {
+            cy.get("button").contains("Submit").click();
+        }
+    })
 })
 
