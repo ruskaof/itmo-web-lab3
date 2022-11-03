@@ -5,6 +5,8 @@ module.exports = {
     output: {
         filename: 'main.js',
         path: path.resolve(__dirname, "src/main/webapp/resources/target"),
+        libraryTarget: 'var',
+        library: 'MyLibrary'
     },
     module: {
         rules: [
@@ -17,5 +19,7 @@ module.exports = {
             },
         ],
     },
-
+    optimization: {
+        minimize: false
+    },
 };

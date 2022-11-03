@@ -1,5 +1,6 @@
 package com.ruskaof.lab3.repository.impl;
 
+import com.google.gson.Gson;
 import com.ruskaof.lab3.AttemptBean;
 import com.ruskaof.lab3.repository.api.AttemptsRepository;
 import com.ruskaof.lab3.util.area.check.api.AreaCheck;
@@ -15,6 +16,7 @@ import javax.inject.Named;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Main implementation of AttemptsRepository interface
@@ -74,4 +76,19 @@ public class AttemptsRepositoryImpl implements Serializable, AttemptsRepository 
         }
     }
 
+    public String getX() {
+        return new Gson().toJson(getAttempts().stream().map(AttemptBean::getX).collect(Collectors.toList()));
+    }
+
+    public String getY() {
+        return new Gson().toJson(getAttempts().stream().map(AttemptBean::getY).collect(Collectors.toList()));
+    }
+
+    public String getR() {
+        return new Gson().toJson(getAttempts().stream().map(AttemptBean::getR).collect(Collectors.toList()));
+    }
+
+    public String getHit() {
+        return new Gson().toJson(getAttempts().stream().map(AttemptBean::isHit).collect(Collectors.toList()));
+    }
 }

@@ -12,4 +12,6 @@ public interface AttemptsRepository extends Serializable {
     void addAttempt(AttemptBean attemptBean);
     List<AttemptBean> getAttempts();
     void clearAttempts();
+
+    void addAttemptFromJsParams(int currentR);
 }

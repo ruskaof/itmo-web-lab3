@@ -5,21 +5,20 @@ function getCssColor(name) {
 }
 
 
-export function initializeCanvasGraph(
+export function drawCanvasGraph(
+    xList, yList, rList, hitList, radioButtonR
 ) {
     /* Init graph parameters */
     const markLen = 20
     const arrowDifference = 20
     const bgColor = getCssColor("--secondary-background")
     const labelsColor = getCssColor("--secondary-text")
-    const cursorColor = getCssColor("--primary-text")
     const axisColor = getCssColor("--primary-text")
     const areasColor = getCssColor("--areas-color")
 
     const hitDotColor = getCssColor("--hit-dot-color")
     const missDotColor = getCssColor("--miss-dot-color")
 
-    let dots = []
 
     /* Init html canvas element */
     const canvas = (document.getElementById("graph"));
@@ -28,61 +27,31 @@ export function initializeCanvasGraph(
     const height = canvas.height;
     const rValue = width / 2.5
 
-    /* Init saving mouse moving history for cool animation */
-    const mouseMoveHistory = [];
-    const nCursors = 3
-    const cursorsLagIntervalMills = 100
-    const cursorSizeCoeff = 0.8
-    for (let i = 0; i < nCursors; i++) {
-        mouseMoveHistory.push({x: -1, y: -1});
-    }
-
-    function drawAllCursorsByHistory(event) {
-        for (let i = 0; i < nCursors; i++) {
-            setTimeout(() => {
-                mouseMoveHistory[i] = {x: event.offsetX, y: event.offsetY};
-            }, i * cursorsLagIntervalMills);
-        }
-    }
-
-    canvas.onmousemove = (event) => {
-        drawAllCursorsByHistory(event);
-    };
-
-    canvas.onmouseleave = (event) => {
-        drawAllCursorsByHistory(event);
-    };
-
     /* Draw the graph */
     drawGraph()
 
 
-    /* Make the cool cursor animation */
-    function animateCursor() {
-        drawGraph();
-
-        for (let i = 0; i < nCursors; i++) {
-            drawCursor(
-                mouseMoveHistory[i].x,
-                mouseMoveHistory[i].y,
-                cursorSizeCoeff ** i
-            );
-        }
-
-        requestAnimationFrame(animateCursor);
+    /**
+     * This method should be used to convert local canvas x value
+     * to a correct math x value of the graph using the R value
+     */
+    function convertXToCanvasCoordinate(x, r, canvasR) {
+        return (x / r * canvasR + width / 2);
     }
 
-    requestAnimationFrame(animateCursor);
-
-
-    /* The following functions should only be used inside the drawGraph() */
-
+    /**
+     * This method should be used to convert local canvas y value
+     * to a correct math x value of the graph using the R value
+     */
+    function convertYToCanvasCoordinate(y, r, canvasR) {
+        return (-y / r * canvasR + height / 2);
+    }
 
     function drawDots() {
-        dots.forEach((dot) => {
-            const x = convertXToCanvasCoordinate(dot.x, dot.r, rValue)
-            const y = convertYToCanvasCoordinate(dot.y, dot.r, rValue)
-            if (dot.wasHit) {
+        for (let i = 0; i < xList.length; i++) {
+            const x = convertXToCanvasCoordinate(xList[i] * radioButtonR / rList[i], rList[i], rValue * radioButtonR / rList[i]);
+            const y = convertYToCanvasCoordinate(yList[i] * radioButtonR / rList[i], rList[i], rValue * radioButtonR / rList[i]);
+            if (hitList[i]) {
                 ctx.fillStyle = hitDotColor
             } else {
                 ctx.fillStyle = missDotColor
@@ -90,10 +59,10 @@ export function initializeCanvasGraph(
             ctx.beginPath();
             ctx.arc(x, y, 3, 0, Math.PI * 2);
             ctx.fill();
-        })
+        }
     }
 
-
+    /* The following functions should only be used inside the drawGraph() */
     function drawHorizontalMarks() {
         ctx.strokeStyle = axisColor;
         ctx.beginPath();
@@ -317,32 +286,6 @@ export function initializeCanvasGraph(
         drawDots()
     }
 
-    /**
-     * Draws a circle on the graph
-     */
-    function drawCursor(x, y, sizeCoeff) {
-        ctx.fillStyle = cursorColor;
-        ctx.beginPath();
-        ctx.arc(x, y, 5 * sizeCoeff, 0, Math.PI * 2);
-        ctx.fill();
-    }
-
-    /**
-     * This method should be used to convert local canvas x value
-     * to a correct math x value of the graph using the R value
-     */
-    function convertXToCanvasCoordinate(x, r, canvasR) {
-        return (x / r * canvasR + width / 2);
-    }
-
-    /**
-     * This method should be used to convert local canvas y value
-     * to a correct math x value of the graph using the R value
-     */
-    function convertYToCanvasCoordinate(y, r, canvasR) {
-        return (-y / r * canvasR + height / 2);
-    }
-
 
     canvas.onmousedown = function (event) {
 
@@ -366,7 +309,7 @@ export function initializeCanvasGraph(
             ]
         )
 
-        console.log("adding attempt: " + x + " " + y + " " + rValue);
+        updateGraph();
     };
 
     /**

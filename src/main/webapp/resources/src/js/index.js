@@ -1,8 +1,9 @@
-import {initializeCanvasGraph} from "./graph";
+import {drawCanvasGraph} from "./graph";
 import "../css/main.css"
 
 
-document.addEventListener('DOMContentLoaded', function() {
-    console.log("starting to execute js");
-    initializeCanvasGraph()
+document.addEventListener('DOMContentLoaded', function () {
+    drawCanvasGraph([], [], [], [], 1);
 })
+
+window.drawDots = drawCanvasGraph

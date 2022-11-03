@@ -8,7 +8,9 @@
       xmlns:p="http://primefaces.org/ui">
 <h:head>
     <title>lab 3</title>
+    <f:facet name="first">
 
+    </f:facet>
 </h:head>
 
 <h:body>
@@ -55,65 +57,60 @@
                         <f:selectItem itemValue="3" itemLabel="3"/>
                         <f:selectItem itemValue="4" itemLabel="4"/>
                         <f:selectItem itemValue="5" itemLabel="5"/>
+                        <p:ajax update="drawDotsPanel"/>
                     </p:selectOneRadio>
                 </h:panelGrid>
 
                 <div class="list-item">
                     <div class="buttons-container">
-                        <p:commandButton id="submit" value="Submit"
-                                         action="#{attemptsRepository.addAttempt(attemptBean)}" update="table @form"/>
-                        <p:commandButton id="reset" value="Reset" action="#{attemptsRepository.clearAttempts()}" update="table" />
+                        <p:commandButton ajax="true" id="submit" value="Submit"
+                                         action="#{attemptsRepository.addAttempt(attemptBean)}"
+                                         update="table @form drawDotsPanel"/>
+                        <p:commandButton ajax="true" id="reset" value="Reset"
+                                         action="#{attemptsRepository.clearAttempts()}"
+                                         update="table @form drawDotsPanel"/>
                     </div>
                 </div>
             </h:form>
 
         </div>
 
-        <h:dataTable value="#{attemptsRepository.attempts}" var="a" id="table">
-            <tr>
-                <td>Attempt</td>
-                <td>X</td>
-                <td>Y</td>
-                <td>R</td>
-                <td>Result</td>
-                <td>Work time(in microseconds)</td>
-                <td>Start time</td>
-            </tr>
-            <h:column>
-                <f:facet name="header">attempt</f:facet>
+        <p:dataTable value="#{attemptsRepository.attempts}" var="a" id="table" size="small" style="width: 700px">
+            <p:column headerText="#">
                 <h:outputText value="#{a.attempt}"/>
-            </h:column>
-            <h:column>
-                <f:facet name="header">X</f:facet>
+            </p:column>
+            <p:column headerText="X">
                 <h:outputText value="#{a.x}"/>
-            </h:column>
-            <h:column>
-                <f:facet name="header">Y</f:facet>
+            </p:column>
+            <p:column headerText="Y">
                 <h:outputText value="#{a.y}"/>
-            </h:column>
-            <h:column>
-                <f:facet name="header">R</f:facet>
+            </p:column>
+            <p:column headerText="R">
                 <h:outputText value="#{a.r}"/>
-            </h:column>
-            <h:column>
-                <f:facet name="header">Result</f:facet>
+            </p:column>
+            <p:column headerText="Result">
                 <h:outputText value="#{a.hit}"/>
-            </h:column>
-            <h:column>
-                <f:facet name="header">Attempt time</f:facet>
+            </p:column>
+            <p:column headerText="Attempt time">
                 <h:outputText value="#{a.attemptTime}"/>
-            </h:column>
-            <h:column>
+            </p:column>
+            <p:column headerText="Process time">
                 <f:facet name="header">Process time</f:facet>
                 <h:outputText value="#{a.processTime}"/>
-            </h:column>
-        </h:dataTable>
+            </p:column>
+        </p:dataTable>
 
 
     </div>
 
 </h:body>
 <h:outputScript name="main.js" library="target"/>
+<h:panelGroup id="drawDotsPanel">
+    <h:outputScript>
+        window.drawDots(JSON.parse('#{attemptsRepository.x}'), JSON.parse('#{attemptsRepository.y}'), JSON.parse('#{attemptsRepository.r}'), JSON.parse('#{attemptsRepository.hit}'), JSON.parse('#{attemptBean.r}'));
+    </h:outputScript>
+</h:panelGroup>
 <p:remoteCommand name="addAttempt" action="#{attemptsRepository.addAttemptFromJsParams(attemptBean.r)}" update="table"
                  process="@this"/>
+<p:remoteCommand name="updateGraph" update="drawDotsPanel" process="@this"/>
 </html>
