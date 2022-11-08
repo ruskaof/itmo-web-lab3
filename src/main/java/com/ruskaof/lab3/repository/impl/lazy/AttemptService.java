@@ -1,15 +1,14 @@
-package com.ruskaof.lab3.repository.impl;
+package com.ruskaof.lab3.repository.impl.lazy;
 
 import com.google.gson.Gson;
 import com.ruskaof.lab3.AttemptBean;
-import com.ruskaof.lab3.repository.api.AttemptsRepository;
 import com.ruskaof.lab3.util.area.check.api.AreaCheck;
 import com.ruskaof.lab3.util.area.check.di.AreaCheckQualifier;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
-import javax.enterprise.context.SessionScoped;
+import javax.enterprise.context.ApplicationScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -18,12 +17,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-/**
- * Main implementation of AttemptsRepository interface
- */
-@Named("attemptsRepository")
-@SessionScoped
-public class AttemptsRepositoryImpl implements Serializable, AttemptsRepository {
+@Named("attemptService")
+@ApplicationScoped
+public class AttemptService implements Serializable {
     SessionFactory sessionFactory = new Configuration().configure("hibernate.cfg.xml").addAnnotatedClass(AttemptBean.class).buildSessionFactory();
     private int id = 0;
 
@@ -31,8 +27,12 @@ public class AttemptsRepositoryImpl implements Serializable, AttemptsRepository 
     @AreaCheckQualifier
     private AreaCheck areaCheck;
 
-    {
-        System.out.println("DbManager created");
+    public List<AttemptBean> getAttemptsList(int start, int count) {
+        Session session = sessionFactory.getCurrentSession();
+        session.beginTransaction();
+        List<AttemptBean> data = session.createQuery("From AttemptBean ").setFirstResult(start).setMaxResults(count).list();
+        session.getTransaction().commit();
+        return data;
     }
 
     public void addAttempt(AttemptBean attemptBean) {
@@ -44,6 +44,14 @@ public class AttemptsRepositoryImpl implements Serializable, AttemptsRepository 
         session.beginTransaction();
         session.save(attemptBean);
         session.getTransaction().commit();
+    }
+
+    public int getAttemptsCount() {
+        Session session = sessionFactory.getCurrentSession();
+        session.beginTransaction();
+        int count = session.createQuery("From AttemptBean ").list().size();
+        session.getTransaction().commit();
+        return count;
     }
 
     public List<AttemptBean> getAttempts() {

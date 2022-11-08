@@ -61,10 +61,10 @@
                 <div class="list-item">
                     <div class="buttons-container">
                         <p:commandButton ajax="true" id="submit" value="Submit"
-                                         action="#{attemptsRepository.addAttempt(attemptBean)}"
+                                         action="#{attemptService.addAttempt(attemptBean)}"
                                          update="table @form drawDotsPanel"/>
                         <p:commandButton ajax="true" id="reset" value="Reset"
-                                         action="#{attemptsRepository.clearAttempts()}"
+                                         action="#{attemptService.clearAttempts()}"
                                          update="table @form drawDotsPanel"/>
                     </div>
                 </div>
@@ -72,28 +72,30 @@
 
         </div>
 
-        <p:dataTable value="#{attemptsRepository.attempts}" var="a" id="table" size="small" style="width: 700px">
-            <p:column headerText="#">
-                <h:outputText value="#{a.attempt}"/>
+        <p:dataTable id="table" value="#{lazyModel2}" var="attempt" paginator="true"
+                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                     rows="10" lazy="true" paginatorPosition="bottom" paginatorAlwaysVisible="true"
+                     style="width: 700px">
+            <p:column headerText="id">
+                <h:outputText value="#{attempt.id}"/>
             </p:column>
             <p:column headerText="X">
-                <h:outputText value="#{a.x}"/>
+                <h:outputText value="#{attempt.x}"/>
             </p:column>
             <p:column headerText="Y">
-                <h:outputText value="#{a.y}"/>
+                <h:outputText value="#{attempt.y}"/>
             </p:column>
             <p:column headerText="R">
-                <h:outputText value="#{a.r}"/>
+                <h:outputText value="#{attempt.r}"/>
             </p:column>
             <p:column headerText="Result">
-                <h:outputText value="#{a.hit}"/>
+                <h:outputText value="#{attempt.hit}"/>
             </p:column>
             <p:column headerText="Attempt time">
-                <h:outputText value="#{a.attemptTime}"/>
+                <h:outputText value="#{attempt.attemptTime}"/>
             </p:column>
-            <p:column headerText="Process time">
-                <f:facet name="header">Process time</f:facet>
-                <h:outputText value="#{a.processTime}"/>
+            <p:column headerText="Execution time">
+                <h:outputText value="#{attempt.processTime}"/>
             </p:column>
         </p:dataTable>
 
@@ -104,10 +106,10 @@
 <h:outputScript name="main.js" library="target"/>
 <h:panelGroup id="drawDotsPanel">
     <h:outputScript>
-        window.drawDots(JSON.parse('#{attemptsRepository.x}'), JSON.parse('#{attemptsRepository.y}'), JSON.parse('#{attemptsRepository.r}'), JSON.parse('#{attemptsRepository.hit}'), JSON.parse('#{attemptBean.r}'));
+        window.drawDots(JSON.parse('#{attemptService.x}'), JSON.parse('#{attemptService.y}'), JSON.parse('#{attemptService.r}'), JSON.parse('#{attemptService.hit}'), JSON.parse('#{attemptBean.r}'));
     </h:outputScript>
 </h:panelGroup>
-<p:remoteCommand name="addAttempt" action="#{attemptsRepository.addAttemptFromJsParams(attemptBean.r)}" update="table"
+<p:remoteCommand name="addAttempt" action="#{attemptService.addAttemptFromJsParams(attemptBean.r)}" update="table"
                  process="@this"/>
 <p:remoteCommand name="updateGraph" update="drawDotsPanel" process="@this"/>
 </html>
