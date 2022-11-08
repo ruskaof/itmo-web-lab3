@@ -16,9 +16,13 @@ context("test2", () => {
 
     it("after clicking on the canvas a few times a new row appears each time in the table with id 'table'", () => {
         cy.get("canvas#graph").click();
+        cy.get("#table").find("table").find("tbody").find("tr").should("have.length", 1);
         cy.get("canvas#graph").click();
+        cy.get("#table").find("table").find("tbody").find("tr").should("have.length", 2);
         cy.get("canvas#graph").click();
         cy.get("#table").find("table").find("tbody").find("tr").should("have.length", 3);
+        cy.get("canvas#graph").click();
+        cy.get("#table").find("table").find("tbody").find("tr").should("have.length", 4);
     });
 
     it("after adding a few rows to the table with id 'table' and clicking on the button with text 'Reset' the table is empty", () => {
@@ -27,6 +31,7 @@ context("test2", () => {
         cy.get("canvas#graph").click();
         cy.get("button").contains("Reset").click();
 
+        // table should be empty or have 1 row with 1 cell with text "No data available in table"
         cy.get("#table").find("table").find("tbody").find("tr").should("have.length", 1);
         cy.get("#table").find("table").find("tbody").find("tr").contains("Данные не найдены");
     })
@@ -49,10 +54,10 @@ context("test2", () => {
         cy.get("#table").find("table").find("tbody").find("tr").find("td").eq(3).should("have.text", "2");
     })
 
-    it("can handle 10 million requests", () => {
-        for (let i = 0; i < 10000000; i++) {
-            cy.get("button").contains("Submit").click();
-        }
-    })
+    // it("can handle 10 million requests", () => {
+    //     for (let i = 0; i < 1000; i++) {
+    //         cy.get("button").contains("Submit").click();
+    //     }
+    // })
 })
 

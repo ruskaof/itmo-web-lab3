@@ -1,5 +1,6 @@
 package com.ruskaof.lab3.util.area.check.di;
 
+
 import javax.inject.Qualifier;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
