@@ -17,11 +17,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Named("attemptService")
+@Named("attemptRepository")
 @ApplicationScoped
-public class AttemptService implements Serializable {
+public class AttemptRepositoryWithPagination implements Serializable {
     SessionFactory sessionFactory = new Configuration().configure("hibernate.cfg.xml").addAnnotatedClass(AttemptBean.class).buildSessionFactory();
-    private int id = 0;
+    private static final int LATEST_ATTEMPTS_COUNT = 10;
+    private int id = 10_000_001;
 
     @Inject
     @AreaCheckQualifier
@@ -33,6 +34,26 @@ public class AttemptService implements Serializable {
         List<AttemptBean> data = session.createQuery("From AttemptBean ").setFirstResult(start).setMaxResults(count).list();
         session.getTransaction().commit();
         return data;
+    }
+
+    public List<AttemptBean> getLatestAttemptsList() {
+        int attemptsCount = getAttemptsCount();
+        Session session = sessionFactory.getCurrentSession();
+        session.beginTransaction();
+        int firstResultIndex = Math.max(attemptsCount - LATEST_ATTEMPTS_COUNT, 0);
+        List<AttemptBean> data = session.createQuery("From AttemptBean ").setFirstResult(firstResultIndex).setMaxResults(LATEST_ATTEMPTS_COUNT).list();
+        session.getTransaction().commit();
+
+        System.out.println("getLatestAttemptsList " + data.size());
+        return data;
+    }
+
+    public void addOneThousandAttempts() {
+        for (int i = 0; i < 1_000_00; i++) {
+            System.out.println("addAttempt " + i);
+            addAttempt(new AttemptBean());
+        }
+
     }
 
     public void addAttempt(AttemptBean attemptBean) {
@@ -49,15 +70,9 @@ public class AttemptService implements Serializable {
     public int getAttemptsCount() {
         Session session = sessionFactory.getCurrentSession();
         session.beginTransaction();
-        int count = session.createQuery("From AttemptBean ").list().size();
+        int count = session.createQuery("select count(*) from AttemptBean", Number.class).getSingleResult().intValue();
         session.getTransaction().commit();
         return count;
-    }
-
-    public List<AttemptBean> getAttempts() {
-        try (Session session = sessionFactory.openSession()) {
-            return session.createQuery("From AttemptBean ").list();
-        }
     }
 
     public void clearAttempts() {
@@ -85,18 +100,22 @@ public class AttemptService implements Serializable {
     }
 
     public String getX() {
-        return new Gson().toJson(getAttempts().stream().map(AttemptBean::getX).collect(Collectors.toList()));
+        return new Gson().toJson(getLatestAttemptsList().stream().map(AttemptBean::getX).collect(Collectors.toList()));
     }
 
     public String getY() {
-        return new Gson().toJson(getAttempts().stream().map(AttemptBean::getY).collect(Collectors.toList()));
+        return new Gson().toJson(getLatestAttemptsList().stream().map(AttemptBean::getY).collect(Collectors.toList()));
     }
 
     public String getR() {
-        return new Gson().toJson(getAttempts().stream().map(AttemptBean::getR).collect(Collectors.toList()));
+        return new Gson().toJson(getLatestAttemptsList().stream().map(AttemptBean::getR).collect(Collectors.toList()));
     }
 
     public String getHit() {
-        return new Gson().toJson(getAttempts().stream().map(AttemptBean::isHit).collect(Collectors.toList()));
+        return new Gson().toJson(getLatestAttemptsList().stream().map(AttemptBean::isHit).collect(Collectors.toList()));
+    }
+
+    public String getDotsCoordinates() {
+        return new Gson().toJson(getLatestAttemptsList().stream().map(AttemptBean::getCoordinates).collect(Collectors.toList()));
     }
 }

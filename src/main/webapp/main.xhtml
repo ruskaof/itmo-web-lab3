@@ -61,10 +61,13 @@
                 <div class="list-item">
                     <div class="buttons-container">
                         <p:commandButton ajax="true" id="submit" value="Submit"
-                                         action="#{attemptService.addAttempt(attemptBean)}"
+                                         action="#{attemptRepository.addAttempt(attemptBean)}"
                                          update="table @form drawDotsPanel"/>
                         <p:commandButton ajax="true" id="reset" value="Reset"
-                                         action="#{attemptService.clearAttempts()}"
+                                         action="#{attemptRepository.clearAttempts()}"
+                                         update="table @form drawDotsPanel"/>
+                        <p:commandButton ajax="true" id="thousand" value="Add one thousand"
+                                         action="#{attemptRepository.addOneThousandAttempts()}"
                                          update="table @form drawDotsPanel"/>
                     </div>
                 </div>
@@ -72,7 +75,7 @@
 
         </div>
 
-        <p:dataTable id="table" value="#{lazyModel2}" var="attempt" paginator="true"
+        <p:dataTable id="table" value="#{attemptsList}" var="attempt" paginator="true"
                      paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
                      rows="10" lazy="true" paginatorPosition="bottom" paginatorAlwaysVisible="true"
                      style="width: 700px">
@@ -106,10 +109,10 @@
 <h:outputScript name="main.js" library="target"/>
 <h:panelGroup id="drawDotsPanel">
     <h:outputScript>
-        window.drawDots(JSON.parse('#{attemptService.x}'), JSON.parse('#{attemptService.y}'), JSON.parse('#{attemptService.r}'), JSON.parse('#{attemptService.hit}'), JSON.parse('#{attemptBean.r}'));
+        window.drawDots(JSON.parse('#{attemptRepository.getDotsCoordinates()}'), JSON.parse('#{attemptBean.r}'));
     </h:outputScript>
 </h:panelGroup>
-<p:remoteCommand name="addAttempt" action="#{attemptService.addAttemptFromJsParams(attemptBean.r)}" update="table"
+<p:remoteCommand name="addAttempt" action="#{attemptRepository.addAttemptFromJsParams(attemptBean.r)}" update="table"
                  process="@this"/>
 <p:remoteCommand name="updateGraph" update="drawDotsPanel" process="@this"/>
 </html>

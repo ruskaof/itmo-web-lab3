@@ -113,4 +113,38 @@ public class AttemptBean implements Serializable {
     public int hashCode() {
         return Objects.hash(attempt, x, y, r, hit, processTime, attemptTime, simpleDateFormat);
     }
+
+    public Coordinates getCoordinates() {
+        return new Coordinates(x, y, r, hit);
+    }
+
+    public static class Coordinates {
+        private final double x;
+        private final double y;
+        private final int r;
+        private final boolean hit;
+
+        public Coordinates(double x, double y, int r, boolean hit) {
+            this.x = x;
+            this.y = y;
+            this.r = r;
+            this.hit = hit;
+        }
+
+        public double getX() {
+            return x;
+        }
+
+        public double getY() {
+            return y;
+        }
+
+        public int getR() {
+            return r;
+        }
+
+        public boolean isHit() {
+            return hit;
+        }
+    }
 }

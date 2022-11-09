@@ -6,8 +6,12 @@ function getCssColor(name) {
 
 
 export function drawCanvasGraph(
-    xList, yList, rList, hitList, radioButtonR
+    coordinatesList, radioButtonR
 ) {
+    const xList = coordinatesList.map((coordinate) => coordinate.x);
+    const yList = coordinatesList.map((coordinate) => coordinate.y);
+    const rList = coordinatesList.map((coordinate) => coordinate.r);
+    const hitList = coordinatesList.map((coordinate) => coordinate.hit);
     /* Init graph parameters */
     const markLen = 20
     const arrowDifference = 20

@@ -12,14 +12,14 @@ import java.util.List;
 import java.util.Map;
 
 
-@Named("lazyModel2")
+@Named("attemptsList")
 @SessionScoped
 public class AttemptLazyDataModel extends LazyDataModel<AttemptBean> {
 
     @Inject
-    private AttemptService service;
+    private AttemptRepositoryWithPagination service;
 
-    public void setService(AttemptService service) {
+    public void setService(AttemptRepositoryWithPagination service) {
         this.service = service;
     }
 
